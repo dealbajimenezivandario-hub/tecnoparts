@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Mi Carrito - TecnoParts</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="carrito.css">
+</head>
+
+<body>
+
+<div class="topbar">
+  📍 Entregas locales exclusivas en Santa Marta
+</div>
+
+<header class="navbar">
+
+  <a href="../inicio/inicio.html" class="logo">
+    📺 TecnoParts
+  </a>
+
+  <nav class="nav-links">
+    <a href="../inicio/inicio.html">Inicio</a>
+    <a href="../catalogo/catalogo.html">Catálogo</a>
+    <a href="../admin/admin.html">+ Agregar Tarjeta</a>
+
+  </nav>
+
+  <div class="nav-actions">
+
+    <a href="../login/login.html" class="btn-login" id="btnLogin">
+      👤 Ingresar
+    </a>
+
+    <a href="carrito.html" class="btn-cart active">
+      🛒 <span id="cartCount">0</span>
+    </a>
+
+  </div>
+
+</header>
+
+<main class="cart-layout">
+
+  <h1 class="cart-title">
+    🛍️ Mi Carrito
+  </h1>
+
+  <div class="cart-grid">
+
+    <section 
+      class="cart-items" 
+      id="cartItems" 
+      data-testid="cart-items"
+    >
+      <div class="loading">Cargando...</div>
+    </section>
+
+    <aside class="cart-summary" id="cartSummary">
+
+      <h3>Resumen del Pedido</h3>
+
+      <hr>
+
+      <div class="summary-row">
+        <span>
+          Subtotal (<span id="itemCount">0</span> ítems)
+        </span>
+
+        <strong id="subtotal">$0</strong>
+      </div>
+
+      <div class="summary-row">
+        <span>Envío (Santa Marta)</span>
+
+        <strong id="envio">$50.000</strong>
+      </div>
+
+      <hr>
+
+      <div class="summary-row total">
+
+        <span>Total a Pagar</span>
+
+        <strong id="total" data-testid="cart-total">
+          $0
+        </strong>
+
+      </div>
+
+      <!-- Modalidad de compra -->
+<div class="modalidad-block">
+  <p class="modalidad-title">Selecciona la modalidad:</p>
+  <div class="modalidad-options">
+    <label class="mod-opt" data-testid="mod-segura">
+      <input type="radio" name="modalidad" value="segura">
+      <div class="mod-opt-body">
+        <span class="mod-icon">✓</span>
+        <span class="mod-name">Compra Segura</span>
+      </div>
+    </label>
+
+    <label class="mod-opt" data-testid="mod-prestamo">
+      <input type="radio" name="modalidad" value="prestamo">
+      <div class="mod-opt-body">
+        <span class="mod-icon">↻</span>
+        <span class="mod-name">Préstamo</span>
+      </div>
+    </label>
+  </div>
+
+  <div class="mod-info" id="modInfo" data-testid="mod-info">
+    <span class="mod-info-hint">
+      ↑ Selecciona una modalidad para ver los detalles.
+    </span>
+  </div>
+</div>
+
+      <button 
+        class="btn-pay" 
+        id="btnPay" 
+        data-testid="btn-checkout"
+      >
+        Proceder al Pago →
+      </button>
+
+      <p class="secure-pay">
+        ✓ Pago seguro y encriptado
+      </p>
+
+
+    </aside>
+
+  </div>
+
+  <div 
+    class="info-shipping" 
+    id="infoShipping" 
+    style="display:none"
+  >
+
+    <span class="icon">📍</span>
+
+    <div>
+
+      <strong>
+        Entregas exclusivas en Santa Marta
+      </strong>
+
+      <p>
+        Los envíos se realizan el mismo día si el pedido es confirmado antes de las 4:00 PM.
+      </p>
+
+    </div>
+
+  </div>
+
+</main>
+
+<script src="carrito.js"></script>
+
+</body>
+</html>

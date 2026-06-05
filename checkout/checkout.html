@@ -1,0 +1,220 @@
+"<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finalizar Pago - TecnoParts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="checkout.css">
+</head>
+<body>
+
+<div class="topbar">📍 Entregas locales exclusivas en Santa Marta</div>
+
+<header class="navbar">
+  <a href="../inicio/inicio.html" class="logo">📺 TecnoParts</a>
+  <nav class="nav-links">
+    <a href="../inicio/inicio.html">Inicio</a>
+    <a href="../catalogo/catalogo.html">Catálogo</a>
+  </nav>
+  <a href="../carrito/carrito.html" class="back-link">← Volver al carrito</a>
+</header>
+
+<main class="checkout-layout">
+
+  <div class="checkout-head">
+    <h1>💳 Finalizar Compra</h1>
+    <div class="mod-badge" id="modBadge" data-testid="modalidad-badge">—</div>
+  </div>
+
+  <div class="checkout-grid">
+
+    <!-- COLUMNA IZQ: Formulario -->
+    <section class="checkout-form">
+
+      <!-- 1. DIRECCIÓN -->
+      <div class="block">
+        <h2>1. Datos de entrega</h2>
+        <div class="row-2">
+          <div class="field">
+            <label>Nombre del receptor *</label>
+            <div class="input-icon">
+              <span>👤</span>
+              <input type="text" name="receptor" required placeholder="Tu nombre completo" data-testid="ck-receptor">
+            </div>
+          </div>
+          <div class="field">
+            <label>Teléfono / WhatsApp *</label>
+            <div class="input-icon">
+              <span>📱</span>
+              <input type="tel" name="telefono" required placeholder="+57 300 000 0000" data-testid="ck-telefono">
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Dirección de entrega *</label>
+          <div class="input-icon">
+            <span>📍</span>
+            <input type="text" name="direccion" required placeholder="Calle / Carrera, número, apto..." data-testid="ck-direccion">
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div class="field">
+            <label>Barrio *</label>
+            <div class="input-icon">
+              <span>🏘️</span>
+              <input type="text" name="barrio" required placeholder="Ej: El Rodadero" data-testid="ck-barrio">
+            </div>
+          </div>
+          <div class="field">
+            <label>Ciudad</label>
+            <div class="input-icon">
+              <span>🌆</span>
+              <input type="text" name="ciudad" value="Santa Marta" readonly>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Notas para el repartidor (opcional)</label>
+          <div class="input-icon textarea-wrap">
+            <span>📝</span>
+            <textarea name="notas" rows="2" placeholder="Referencias, color de la casa, horario preferido..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. MÉTODO DE PAGO -->
+      <div class="block">
+        <h2>2. Método de pago</h2>
+        <div class="pay-options" data-testid="pay-options">
+          <label class="pay-opt"><input type="radio" name="metodo" value="nequi" required><span class="pay-name">📲 Nequi</span></label>
+          <label class="pay-opt"><input type="radio" name="metodo" value="daviplata"><span class="pay-name">💜 DaviPlata</span></label>
+          <label class="pay-opt"><input type="radio" name="metodo" value="pse"><span class="pay-name">🏦 PSE</span></label>
+          <label class="pay-opt"><input type="radio" name="metodo" value="tarjeta"><span class="pay-name">💳 Tarjeta</span></label>
+        </div>
+
+        <!-- Paneles dinámicos -->
+        <div class="pay-panel hidden" id="panel-nequi">
+          <p class="panel-hint">Ingresa el número celular asociado a tu Nequi. Te enviaremos una notificación de cobro.</p>
+          <div class="field">
+            <label>Celular Nequi *</label>
+            <div class="input-icon"><span>📱</span><input type="tel" name="nequi_cel" placeholder="300 000 0000" data-testid="ck-nequi"></div>
+          </div>
+        </div>
+
+        <div class="pay-panel hidden" id="panel-daviplata">
+          <p class="panel-hint">Ingresa el número celular asociado a tu DaviPlata.</p>
+          <div class="field">
+            <label>Celular DaviPlata *</label>
+            <div class="input-icon"><span>📱</span><input type="tel" name="dp_cel" placeholder="300 000 0000" data-testid="ck-daviplata"></div>
+          </div>
+        </div>
+
+        <div class="pay-panel hidden" id="panel-pse">
+          <p class="panel-hint">Selecciona tu banco. Te redirigiremos al portal PSE para finalizar el pago.</p>
+          <div class="field">
+            <label>Banco *</label>
+            <div class="input-icon">
+              <span>🏦</span>
+              <select name="pse_banco" data-testid="ck-pse">
+                <option value="">Selecciona tu banco...</option>
+                <option>Bancolombia</option>
+                <option>Banco de Bogotá</option>
+                <option>BBVA</option>
+                <option>Davivienda</option>
+                <option>Banco AV Villas</option>
+                <option>Banco Popular</option>
+                <option>Banco Caja Social</option>
+                <option>Banco Falabella</option>
+                <option>Otro</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label>Tipo de persona</label>
+            <div class="input-icon">
+              <span>👤</span>
+              <select name="pse_tipo">
+                <option>Natural</option>
+                <option>Jurídica</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="pay-panel hidden" id="panel-tarjeta">
+          <p class="panel-hint">Datos de tu tarjeta crédito / débito. Pago 100% encriptado.</p>
+          <div class="field">
+            <label>Número de tarjeta *</label>
+            <div class="input-icon"><span>💳</span><input type="text" name="card_num" placeholder="0000 0000 0000 0000" maxlength="19" data-testid="ck-card-num"></div>
+          </div>
+          <div class="field">
+            <label>Nombre en la tarjeta *</label>
+            <div class="input-icon"><span>👤</span><input type="text" name="card_name" placeholder="Como aparece en la tarjeta"></div>
+          </div>
+          <div class="row-2">
+            <div class="field">
+              <label>Vencimiento *</label>
+              <div class="input-icon"><span>📅</span><input type="text" name="card_exp" placeholder="MM/AA" maxlength="5"></div>
+            </div>
+            <div class="field">
+              <label>CVV *</label>
+              <div class="input-icon"><span>🔒</span><input type="text" name="card_cvv" placeholder="123" maxlength="4"></div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Cuotas</label>
+            <div class="input-icon">
+              <span>🔢</span>
+              <select name="card_cuotas">
+                <option value="1">1 cuota (sin interés)</option>
+                <option value="3">3 cuotas</option>
+                <option value="6">6 cuotas</option>
+                <option value="12">12 cuotas</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- COLUMNA DER: Resumen -->
+    <aside class="checkout-summary">
+      <h3>Resumen del pedido</h3>
+      <div class="sum-items" id="sumItems"><div class="loading">Cargando...</div></div>
+      <hr>
+      <div class="sum-row"><span>Subtotal</span><strong id="sumSub">$0</strong></div>
+      <div class="sum-row"><span>Domicilio (Santa Marta)</span><strong id="sumEnv">$50.000</strong></div>
+      <hr>
+      <div class="sum-row total"><span>Total a pagar</span><strong id="sumTot" data-testid="ck-total">$0</strong></div>
+
+      <div class="modalidad-info" id="modInfoCk"></div>
+
+      <button class="btn-confirm" id="btnConfirm" data-testid="btn-confirm">✓ Confirmar y pagar</button>
+      <p class="secure"><span>🔒</span> Tus datos están protegidos.</p>
+    </aside>
+
+  </div>
+</main>
+
+<!-- Modal de éxito -->
+<div class="modal" id="successModal" data-testid="success-modal">
+  <div class="modal-card">
+    <div class="ok-icon">✓</div>
+    <h2>¡Pedido confirmado!</h2>
+    <p id="successMsg">Tu pedido ha sido recibido. Te contactaremos por WhatsApp para coordinar la entrega.</p>
+    <p class="order-num">Orden #<span id="orderNum">000000</span></p>
+    <a href="../inicio/inicio.html" class="btn-confirm">Volver al inicio</a>
+  </div>
+</div>
+
+<script src="checkout.js"></script>
+</body>
+</html>
+"

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agregar Tarjeta - TecnoParts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<div class="topbar">📍 Panel de administración - TecnoParts</div>
+
+<header class="navbar">
+  <a href="../inicio/inicio.html" class="logo">📺 TecnoParts</a>
+  <nav class="nav-links">
+    <a href="../inicio/inicio.html">Inicio</a>
+    <a href="../catalogo/catalogo.html">Catálogo</a>
+    <a href="admin.html" class="active">Agregar Tarjeta</a>
+  </nav>
+  <a href="../carrito/carrito.html" class="btn-cart">🛒</a>
+</header>
+
+<main class="admin-layout">
+
+  <!-- FORMULARIO -->
+  <section class="form-card">
+    <h1>➕ Agregar Nueva Tarjeta</h1>
+    <p class="muted">Carga al inventario una nueva Main Board, Fuente o T-Con.</p>
+
+    <form id="adminForm" enctype="multipart/form-data" data-testid="admin-form">
+
+      <!-- Imagen -->
+      <div class="field">
+        <label>Imagen de la tarjeta</label>
+        <div class="img-uploader" id="imgUploader">
+          <input type="file" name="imagen" id="imgInput" accept="image/*" data-testid="admin-imagen">
+          <div class="img-preview" id="imgPreview">
+            <span class="ph">📷 Haz clic o arrastra una imagen</span>
+          </div>
+          <small>Formatos: JPG, PNG, WEBP. Máx 5MB.</small>
+        </div>
+      </div>
+
+      <div class="row-2">
+        <div class="field">
+          <label>Nombre de la tarjeta *</label>
+            <div class="input-icon">
+            <span>📺</span>
+          <input type="text" name="nombre" required placeholder="Nombre" data-testid="admin-nombre">
+        </div>
+       </div>
+        <div class="field">
+          <label>Referencia / Modelo *</label>
+            <div class="input-icon">
+            <span>🏷️</span>
+          <input type="text" name="modelo" required placeholder="Ej: UN55RU7100KXZL" data-testid="admin-modelo">
+        </div>
+      </div>
+</div>
+      <div class="row-3">
+        <div class="field">
+          <label>Marca *</label>
+           <div class="input-icon">
+            <span>🏭</span>
+          <select name="marca" required data-testid="admin-marca">
+            <option value="">Selecciona...</option>
+            <option value="Samsung">Samsung</option>
+            <option value="LG">LG</option>
+            <option value="Sony">Sony</option>
+            <option value="Hisense">Hisense</option>
+            <option value="TCL">TCL</option>
+            <option value="Sankey">Sankey</option>
+            <option value="Otra">Otra</option>
+          </select>
+        </div>
+        </div>
+        <div class="field">
+          <label>Tipo de tarjeta *</label>
+            <div class="input-icon">
+            <span>🧩</span>
+          <select name="tipo" required data-testid="admin-tipo">
+            <option value="">Selecciona...</option>
+            <option value="Main Board">Main Board</option>
+            <option value="Fuente de Poder">Fuente de Poder</option>
+            <option value="T-Con">T-Con</option>
+            <option value="Otra">Otra</option>
+          </select>
+        </div>
+        </div>
+        <div class="field">
+          <label>Stock</label>
+           <div class="input-icon">
+            <span>📦</span>
+          <input type="number" name="stock" min="0" value="1" data-testid="admin-stock">
+        </div>
+        </div>
+      </div>
+
+      <div class="row-2">
+        <div class="field">
+          <label>Precio (COP) *</label>
+            <div class="input-icon">
+            <span>💲</span>
+            <input type="number" name="precio" min="0" required placeholder="Precio" data-testid="admin-precio">
+          </div>
+        </div>
+        <div class="field">
+          <label>Ubicación física</label>
+            <div class="input-icon">
+            <span>📍</span>
+          <input type="text" name="ubicacion" placeholder="Ej: Bodega A - Estante 2" data-testid="admin-ubicacion">
+        </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Descripción (opcional)</label>
+          <div class="input-icon textarea-wrap">
+          <span>📝</span>
+        <textarea name="descripcion" rows="3" placeholder="Notas, garantía, compatibilidad..." data-testid="admin-descripcion"></textarea>
+      </div>
+    </div>
+
+      <div class="actions">
+        <button type="reset" class="btn-secondary">Limpiar</button>
+        <button type="submit" class="btn-primary" data-testid="admin-submit">💾 Guardar Tarjeta</button>
+      </div>
+
+      <div class="msg" id="formMsg"></div>
+    </form>
+  </section>
+
+  <!-- LISTADO -->
+  <section class="list-card">
+    <div class="list-head">
+      <h2>📋 Inventario actual</h2>
+      <button class="btn-link" id="reloadBtn">↻ Recargar</button>
+    </div>
+    <div class="table-wrap">
+      <table class="prod-table">
+        <thead>
+          <tr>
+            <th>Imagen</th>
+            <th>Nombre</th>
+            <th>Ref.</th>
+            <th>Marca</th>
+            <th>Tipo</th>
+            <th>Precio</th>
+            <th>Ubicación</th>
+            <th>Stock</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="prodBody" data-testid="admin-table">
+          <tr><td colspan="9" class="loading">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<script src="admin.js"></script>
+</body>
+</html>

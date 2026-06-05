@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>TecnoParts - Tarjetas de TV en Santa Marta</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="inicio.css">
+</head>
+
+<body>
+
+<div class="topbar">
+  <span>📍 Entregas locales exclusivas en Santa Marta</span>
+</div>
+
+<header class="navbar">
+
+  <a href="inicio.html" class="logo">
+    📺 TecnoParts
+  </a>
+
+  <nav class="nav-links">
+    <a href="inicio.html" class="active">Inicio</a>
+    <a href="../catalogo/catalogo.html">Catálogo</a>
+    <a href="../admin/admin.html">+ Agregar Tarjeta</a>
+  </nav>
+
+  <form class="nav-search" id="navSearch">
+    <input 
+      type="text" 
+      name="q" 
+      placeholder="Buscar por modelo de TV..." 
+      autocomplete="off"
+    >
+
+    <button type="submit">🔍</button>
+  </form>
+
+  <div class="nav-actions">
+    <a href="../login/login.html" class="btn-login" id="btnLogin">
+      👤 Ingresar
+    </a>
+
+    <a href="../carrito/carrito.html" class="btn-cart">
+      🛒 <span id="cartCount">0</span>
+    </a>
+  </div>
+
+</header>
+
+<section class="hero">
+
+  <div class="hero-content">
+
+    <span class="hero-tag">
+      Para técnicos en Santa Marta
+    </span>
+
+    <h1>
+      Encuentra la tarjeta exacta para tu 
+      <span class="hl">reparación</span>.
+    </h1>
+
+    <p>
+      El inventario más completo de Main Boards, Fuentes y T-Con. 
+      Búsqueda rápida por modelo y entregas el mismo día.
+    </p>
+
+    <form class="hero-search" id="heroSearch">
+
+      <input 
+        type="text" 
+        name="q" 
+        placeholder="Ingresa el modelo del TV (Ej: UN55RU7100)" 
+        autocomplete="off"
+      >
+
+      <button type="submit">Buscar</button>
+
+    </form>
+
+  </div>
+
+  <div class="hero-img">
+    <img 
+      src="../img/hero-tv.png" 
+      alt="TV con tarjeta" 
+      onerror="this.style.display='none'"
+    >
+  </div>
+
+</section>
+
+<section class="features">
+
+  <div class="feature">
+
+    <div class="feature-icon">🚚</div>
+
+    <div>
+      <h3>Entregas Locales</h3>
+
+      <p>
+        Recibe tus repuestos el mismo día en cualquier punto de Santa Marta.
+      </p>
+    </div>
+
+  </div>
+
+  <div class="feature">
+
+    <div class="feature-icon">🛡️</div>
+
+    <div>
+      <h3>Piezas Testeadas</h3>
+
+      <p>
+        Todas las tarjetas pasan por rigurosas pruebas antes de su venta.
+      </p>
+    </div>
+
+  </div>
+
+  <div class="feature">
+
+    <div class="feature-icon">🧩</div>
+
+    <div>
+      <h3>Inventario Exacto</h3>
+
+      <p>
+        Búsqueda directa por modelo de TV para garantizar compatibilidad.
+      </p>
+    </div>
+
+  </div>
+
+</section>
+
+<section class="destacados">
+
+  <div class="destacados-head">
+
+    <div>
+      <h2>Tarjetas Destacadas</h2>
+
+      <p>
+        Repuestos más buscados por nuestros técnicos aliados.
+      </p>
+    </div>
+
+    <a href="../catalogo/catalogo.html" class="link-arrow">
+      Ver todo el inventario →
+    </a>
+
+  </div>
+
+  <div class="grid" id="destacadosGrid">
+    <div class="loading">Cargando productos...</div>
+  </div>
+
+</section>
+
+<section class="cta-banner">
+
+  <h2>¿No encuentras la tarjeta que buscas?</h2>
+
+  <p>
+    Regístrate en nuestra plataforma para acceder a pedidos especiales,
+    precios de mayorista y notificaciones cuando el repuesto que necesitas
+    ingrese al inventario.
+  </p>
+
+  <div class="cta-buttons">
+
+    <a href="../login/login.html" class="btn-white">
+      Crear cuenta de técnico
+    </a>
+
+    <a href="../catalogo/catalogo.html" class="btn-outline-white">
+      Explorar catálogo
+    </a>
+
+  </div>
+
+</section>
+
+<footer class="footer">
+
+  <div class="footer-grid">
+
+    <div>
+      <h4>📺 TecnoParts</h4>
+
+      <p>
+        El marketplace líder de tarjetas de televisores para técnicos
+        especializados en Santa Marta.
+      </p>
+    </div>
+
+    <div>
+
+      <h5>Enlaces Rápidos</h5>
+
+      <a href="inicio.html">Inicio</a>
+      <a href="../catalogo/catalogo.html">Catálogo Completo</a>
+      <a href="../login/login.html">Mi Cuenta</a>
+
+    </div>
+
+    <div>
+
+      <h5>Soporte</h5>
+
+      <a href="#">Políticas de Garantía</a>
+      <a href="#">Tiempos de Entrega</a>
+      <a href="#">Contacto</a>
+
+    </div>
+
+    <div>
+
+      <h5>Contacto (Santa Marta)</h5>
+
+      <p>
+        <strong>WhatsApp:</strong> +57 300 5934 778
+      </p>
+
+      <p>
+        Lunes a Sábado: 8:00 AM - 5:00 PM
+      </p>
+
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+
+    <span>
+      © 2026 TecnoParts. Todos los derechos reservados.
+    </span>
+
+    <span>
+      Pagos seguros con: 
+      <strong>Nequi</strong> · 
+      <strong>DaviPlata</strong> · 
+      <strong>Tarjetas</strong>
+    </span>
+
+  </div>
+
+</footer>
+
+<script src="inicio.js"></script>
+
+</body>
+</html>

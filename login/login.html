@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Iniciar Sesión / Registro - TecnoParts</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="login.css">
+</head>
+
+<body>
+
+<div class="topbar">📍 Entregas locales exclusivas en Santa Marta</div>
+
+<header class="navbar">
+  <a href="../inicio/inicio.html" class="logo">📺 TecnoParts</a>
+
+  <nav class="nav-links">
+    <a href="../inicio/inicio.html">Inicio</a>
+    <a href="../catalogo/catalogo.html">Catálogo</a>
+  </nav>
+
+  <a href="../carrito/carrito.html" class="btn-cart">🛒</a>
+</header>
+
+<main class="auth-wrap">
+  <div class="auth-card">
+
+    <div class="tabs">
+      <button class="tab active" data-tab="login" data-testid="tab-login">
+        Iniciar Sesión
+      </button>
+
+      <button class="tab" data-tab="register" data-testid="tab-register">
+        Registrarse
+      </button>
+    </div>
+
+    <!-- Login form -->
+    <form class="form" id="loginForm" data-testid="login-form">
+
+      <h1>Bienvenido de nuevo</h1>
+
+      <p class="muted">
+        Ingresa para gestionar tus pedidos y repuestos.
+      </p>
+
+      <label>Correo electrónico</label>
+
+      <div class="input-icon">
+        <span>✉️</span>
+
+        <input 
+          type="email" 
+          name="email" 
+          placeholder="tecnico@ejemplo.com" 
+          required 
+          data-testid="login-email"
+        >
+      </div>
+
+      <div class="row-between">
+        <label>Contraseña</label>
+
+        <a href="#" class="link-small">
+          ¿Olvidaste tu contraseña?
+        </a>
+      </div>
+
+      <div class="input-icon">
+        <span>🔒</span>
+
+        <input 
+          type="password" 
+          name="password" 
+          placeholder="••••••••" 
+          required 
+          data-testid="login-password"
+        >
+      </div>
+
+      <button 
+        type="submit" 
+        class="btn-primary" 
+        data-testid="login-submit"
+      >
+        Ingresar a mi cuenta
+      </button>
+
+      <div class="msg" id="loginMsg"></div>
+
+    </form>
+
+    <!-- Register form -->
+    <form class="form hidden" id="registerForm" data-testid="register-form">
+
+      <h1>Crea tu cuenta técnica</h1>
+
+      <p class="muted">
+        Únete a la red de técnicos de Santa Marta.
+      </p>
+
+      <label>Nombre completo / Taller</label>
+
+      <div class="input-icon">
+        <span>👤</span>
+
+        <input 
+          type="text" 
+          name="nombre" 
+          placeholder="Tu nombre o negocio" 
+          required 
+          data-testid="register-name"
+        >
+      </div>
+
+      <label>Correo electrónico</label>
+
+      <div class="input-icon">
+        <span>✉️</span>
+
+        <input 
+          type="email" 
+          name="email" 
+          placeholder="tecnico@ejemplo.com" 
+          required 
+          data-testid="register-email"
+        >
+      </div>
+
+      <label>Contraseña</label>
+
+      <div class="input-icon">
+        <span>🔒</span>
+
+        <input 
+          type="password" 
+          name="password" 
+          placeholder="Mínimo 8 caracteres" 
+          required 
+          minlength="8" 
+          data-testid="register-password"
+        >
+      </div>
+
+      <div class="info-box">
+        ✓ Obtendrás acceso a historial de compras, facturación ágil y alertas de stock de modelos específicos.
+      </div>
+
+      <button 
+        type="submit" 
+        class="btn-primary" 
+        data-testid="register-submit"
+      >
+        Registrarme ahora
+      </button>
+
+      <div class="msg" id="registerMsg"></div>
+
+    </form>
+
+  </div>
+</main>
+
+<script src="login.js"></script>
+
+</body>
+</html>

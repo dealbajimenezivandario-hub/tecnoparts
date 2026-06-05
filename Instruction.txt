@@ -1,0 +1,183 @@
+"# TecnoParts - Marketplace de Tarjetas de TV (Santa Marta)
+
+Proyecto web tradicional con **HTML + CSS + JavaScript + PHP + MySQL** (phpMyAdmin). Cada página tiene su propio archivo HTML, CSS y JS por separado. La comunicación con el servidor se hace por **AJAX (fetch)**.
+
+---
+
+## 1. Requisitos previos
+
+- **XAMPP** (o WAMP / LAMP) con:
+  - Apache
+  - MySQL / MariaDB
+  - PHP 7.4+
+  - phpMyAdmin
+
+Descarga XAMPP: <https://www.apachefriends.org/>
+
+---
+
+## 2. Instalación paso a paso
+
+### 2.1 Copiar el proyecto a `htdocs`
+
+1. Copia toda la carpeta `tecnoparts/` dentro de la carpeta `htdocs` de XAMPP.
+   - Windows: `C:\xampp\htdocs	ecnoparts`
+   - Mac: `/Applications/XAMPP/htdocs/tecnoparts`
+
+### 2.2 Iniciar Apache y MySQL
+
+1. Abre el **Panel de Control de XAMPP**.
+2. Inicia los servicios **Apache** y **MySQL**.
+
+### 2.3 Crear la base de datos
+
+1. Abre tu navegador y entra a: <http://localhost/phpmyadmin>
+2. En el panel izquierdo da clic en **\"Nueva\"**.
+3. Crea una base de datos llamada exactamente: `tecnoparts_db`
+   - Cotejamiento: `utf8mb4_unicode_ci`
+4. Una vez creada, selecciónala en el panel izquierdo.
+5. Ve a la pestaña **\"Importar\"**.
+6. Da clic en **\"Seleccionar archivo\"** y elige el archivo `database.sql` que está en la raíz del proyecto.
+7. Baja al final y da clic en **\"Importar\"**.
+
+> **Alternativa rápida:** En phpMyAdmin > pestaña SQL, copia y pega el contenido de `database.sql` y haz clic en \"Continuar\". El script crea la BD, las tablas y los productos de ejemplo.
+
+### 2.4 Configurar la conexión (opcional)
+
+El archivo `config/db.php` ya viene configurado para XAMPP por defecto:
+
+```php
+host:     localhost
+usuario:  root
+password: (vacío)
+db:       tecnoparts_db
+```
+
+Si tu MySQL usa otra contraseña, edita `config/db.php`.
+
+### 2.5 Agregar imágenes
+
+Coloca las imágenes de los productos dentro de la carpeta `img/`. Los nombres ya están referenciados en la base de datos:
+
+```
+img/main_samsung_un55ru7100.jpg
+img/power_lg_43um7300.jpg
+img/tcon_sony_xbr65x900f.jpg
+img/main_lg_55uk6550.jpg
+img/power_samsung_un43j5200.jpg
+img/tcon_samsung_qn65q70r.jpg
+img/hero-tv.png        (imagen del TV con tarjeta del hero)
+img/logo.png           (logo TecnoParts - opcional)
+```
+
+> Si una imagen no existe, automáticamente se muestra un placeholder.
+
+### 2.6 Probar
+
+Entra a: <http://localhost/tecnoparts/inicio/inicio.html>
+
+---
+
+## 3. Estructura del proyecto
+
+```
+tecnoparts/
+├── README.md
+├── database.sql              # Script de creación de BD y datos de ejemplo
+├── img/                      # Imágenes (las pones tú)
+├── config/
+│   └── db.php                # Conexión PDO a MySQL
+├── api/                      # Endpoints PHP (consumidos por AJAX)
+│   ├── register.php
+│   ├── login.php
+│   ├── logout.php
+│   ├── sesion.php
+│   ├── productos.php
+│   ├── buscar.php
+│   └── carrito.php
+├── inicio/
+│   ├── inicio.html
+│   ├── inicio.css
+│   └── inicio.js
+├── login/
+│   ├── login.html
+│   ├── login.css
+│   └── login.js
+├── catalogo/
+│   ├── catalogo.html
+│   ├── catalogo.css
+│   └── catalogo.js
+├── carrito/
+│   ├── carrito.html
+│   ├── carrito.css
+│   └── carrito.js
+└── busqueda/
+    ├── busqueda.html
+    ├── busqueda.css
+    └── busqueda.js
+```
+
+---
+
+## 4. Tablas de la base de datos
+
+### `usuarios`
+| Campo          | Tipo          | Notas                       |
+|----------------|---------------|-----------------------------|
+| id             | INT PK AI     | Identificador               |
+| nombre         | VARCHAR(150)  | Nombre completo / taller    |
+| email          | VARCHAR(150)  | Único                       |
+| password       | VARCHAR(255)  | Hash con `password_hash()`  |
+| fecha_registro | DATETIME      | Fecha de creación           |
+
+### `productos`
+| Campo       | Tipo          | Notas                                |
+|-------------|---------------|--------------------------------------|
+| id          | INT PK AI     |                                      |
+| modelo      | VARCHAR(100)  | Ej: UN55RU7100KXZL                   |
+| nombre      | VARCHAR(200)  | Ej: Main Board Samsung UN55RU7100    |
+| marca       | VARCHAR(50)   | Samsung, LG, Sony                    |
+| tipo        | VARCHAR(50)   | Main Board, Fuente de Poder, T-Con   |
+| precio      | INT           | En pesos colombianos                 |
+| stock       | INT           |                                      |
+| imagen      | VARCHAR(255)  | Ruta relativa: img/...               |
+| descripcion | TEXT          |                                      |
+
+### `carrito`
+Items del carrito por usuario (o sesión invitada).
+
+### `pedidos` y `pedido_items`
+Se crean al confirmar un pedido (la pasarela de pago en esta versión es solo visual).
+
+---
+
+## 5. Flujo de la app
+
+1. **Inicio** (`/inicio/inicio.html`): hero con buscador, productos destacados, CTA a registro / catálogo.
+2. **Login** (`/login/login.html`): pestañas para alternar entre **Iniciar Sesión** y **Registrarse**.
+3. **Catálogo** (`/catalogo/catalogo.html`): grilla de productos + filtros por marca y tipo de tarjeta.
+4. **Búsqueda** (`/busqueda/busqueda.html`): resultado del buscador. Si encuentra, lista productos. Si no, muestra mensaje **\"No se encontraron tarjetas\"**.
+5. **Carrito** (`/carrito/carrito.html`): items, cantidades, resumen del pedido y botones de pago **visuales** (Nequi, Daviplata, Tarjetas).
+
+---
+
+## 6. Notas técnicas
+
+- **Sesiones PHP** con `session_start()` para login.
+- **Carrito** funciona con sesión de PHP (también permite invitados).
+- **Contraseñas** se almacenan con `password_hash()` (bcrypt).
+- **AJAX** con `fetch()` y respuestas JSON.
+- **No** se requiere ningún framework ni librería externa.
+
+---
+
+## 7. Credenciales de prueba (opcional)
+
+El script SQL crea un usuario demo:
+
+```
+Email:    demo@tecnoparts.com
+Password: demo1234
+```
+
+¡Listo para arrancar!

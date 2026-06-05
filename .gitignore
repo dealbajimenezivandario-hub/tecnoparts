@@ -1,0 +1,17 @@
+# Imágenes subidas por usuarios (opcional, si no quieres versionarlas)
+img/*.jpg
+img/*.png
+img/*.jpeg
+img/*.webp
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+*.log
+
+# Editor
+.vscode/
+.idea/
+
+# Credenciales locales (si las cambias de db.php)
+config/db.local.php

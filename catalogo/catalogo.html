@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Catálogo - TecnoParts</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="catalogo.css">
+</head>
+
+<body>
+
+<div class="topbar">
+  📍 Entregas locales exclusivas en Santa Marta
+</div>
+
+<header class="navbar">
+
+  <a href="../inicio/inicio.html" class="logo">
+    📺 TecnoParts
+  </a>
+
+  <nav class="nav-links">
+    <a href="../inicio/inicio.html">Inicio</a>
+    <a href="catalogo.html" class="active">Catálogo</a>
+    <a href="../admin/admin.html">+ Agregar Tarjeta</a>
+  </nav>
+
+  <form class="nav-search" id="navSearch">
+
+    <input 
+      type="text" 
+      name="q" 
+      placeholder="Buscar por modelo de TV..."
+    >
+
+    <button type="submit">🔍</button>
+
+  </form>
+
+  <div class="nav-actions">
+
+    <a href="../login/login.html" class="btn-login" id="btnLogin">
+      👤 Ingresar
+    </a>
+
+    <a href="../carrito/carrito.html" class="btn-cart">
+      🛒 <span id="cartCount">0</span>
+    </a>
+
+  </div>
+
+</header>
+
+<main class="layout">
+
+  <aside class="filters" data-testid="filters-panel">
+
+    <h3>▽ Filtros</h3>
+
+    <div class="filter-group">
+
+      <h4>Marcas</h4>
+
+      <label>
+        <input 
+          type="checkbox" 
+          name="marca" 
+          value="Samsung" 
+          data-testid="filter-marca-samsung"
+        >
+        Samsung
+      </label>
+
+      <label>
+        <input 
+          type="checkbox" 
+          name="marca" 
+          value="LG" 
+          data-testid="filter-marca-lg"
+        >
+        LG
+      </label>
+
+      <label>
+        <input 
+          type="checkbox" 
+          name="marca" 
+          value="Sony" 
+          data-testid="filter-marca-sony"
+        >
+        Sony
+      </label>
+
+    </div>
+
+    <div class="filter-group">
+
+      <h4>Tipo de Tarjeta</h4>
+
+      <label>
+        <input 
+          type="checkbox" 
+          name="tipo" 
+          value="Main Board" 
+          data-testid="filter-tipo-main"
+        >
+        Main Board
+      </label>
+
+      <label>
+        <input 
+          type="checkbox" 
+          name="tipo" 
+          value="Fuente de Poder" 
+          data-testid="filter-tipo-fuente"
+        >
+        Fuente de Poder
+      </label>
+
+      <label>
+        <input 
+          type="checkbox" 
+          name="tipo" 
+          value="T-Con" 
+          data-testid="filter-tipo-tcon"
+        >
+        T-Con
+      </label>
+
+    </div>
+
+  </aside>
+
+  <section class="content">
+
+    <form class="search-bar" id="searchBar">
+
+      <span>🔍</span>
+
+      <input 
+        type="text" 
+        name="q" 
+        placeholder="Busca por modelo específico de TV (Ej: UN55RU7100)..."
+        data-testid="catalog-search"
+      >
+
+    </form>
+
+    <div class="results-count">
+      Mostrando <strong id="totalCount">0</strong> resultados
+    </div>
+
+    <div class="grid" id="grid" data-testid="catalog-grid">
+      <div class="loading">Cargando...</div>
+    </div>
+
+  </section>
+
+</main>
+
+<footer class="footer">
+
+  <div class="footer-grid">
+
+    <div>
+
+      <h4>📺 TecnoParts</h4>
+
+      <p>
+        El marketplace líder de tarjetas de televisores para técnicos especializados en Santa Marta.
+      </p>
+
+    </div>
+
+    <div>
+
+      <h5>Enlaces Rápidos</h5>
+
+      <a href="../inicio/inicio.html">Inicio</a>
+      <a href="catalogo.html">Catálogo Completo</a>
+      <a href="../login/login.html">Mi Cuenta</a>
+
+    </div>
+
+    <div>
+
+      <h5>Soporte</h5>
+
+      <a href="#">Políticas de Garantía</a>
+      <a href="#">Tiempos de Entrega</a>
+      <a href="#">Contacto</a>
+
+    </div>
+
+    <div>
+
+      <h5>Contacto (Santa Marta)</h5>
+
+      <p>
+        <strong>WhatsApp:</strong> +57 300 000 0000
+      </p>
+
+      <p>
+        Lunes a Sábado: 8:00 AM - 6:00 PM
+      </p>
+
+    </div>
+
+  </div>
+
+</footer>
+
+<script src="catalogo.js"></script>
+
+</body>
+</html>
