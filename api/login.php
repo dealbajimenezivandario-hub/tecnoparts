@@ -16,7 +16,7 @@ if ($email === '' || $password === '') {
 }
 
 $pdo  = getDB();
-$stmt = $pdo->prepare('SELECT id, nombre, email, password FROM usuarios WHERE email = ?');
+$stmt = $pdo->prepare('SELECT id, nombre, email, telefono, rol, password FROM usuarios WHERE email = ?');
 $stmt->execute([$email]);
 $user = $stmt->fetch();
 
@@ -27,9 +27,17 @@ if (!$user || !password_verify($password, $user['password'])) {
 $_SESSION['usuario_id']     = (int) $user['id'];
 $_SESSION['usuario_nombre'] = $user['nombre'];
 $_SESSION['usuario_email']  = $user['email'];
+$_SESSION['usuario_rol']    = $user['rol'] ?: 'comprador';
+$_SESSION['usuario_tel']    = $user['telefono'] ?? '';
 
 jsonResponse([
     'ok' => true,
     'mensaje' => 'Sesion iniciada',
-    'usuario' => ['id' => (int) $user['id'], 'nombre' => $user['nombre'], 'email' => $user['email']]
+    'usuario' => [
+        'id' => (int) $user['id'],
+        'nombre' => $user['nombre'],
+        'email' => $user['email'],
+        'telefono' => $user['telefono'],
+        'rol' => $user['rol'] ?: 'comprador'
+    ]
 ]);

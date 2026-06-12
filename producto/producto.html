@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">Detalle - TecnoParts</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="producto.css">
+</head>
+<body>
+
+<div class="topbar">📍 Entregas locales exclusivas en Santa Marta</div>
+
+<header class="navbar">
+  <a href="../inicio/inicio.html" class="logo">📺 TecnoParts</a>
+  <nav class="nav-links">
+    <a href="../inicio/inicio.html">Inicio</a>
+    <a href="../catalogo/catalogo.html">Catálogo</a>
+        <a href="../admin/admin.html" class="nav-add-card">+ Agregar Tarjeta</a>
+
+  </nav>
+  <a href="../carrito/carrito.html" class="btn-cart">🛒 <span id="cartCount">0</span></a>
+  <a href="../login/login.html" class="btn-login" id="btnLogin">👤 Ingresar</a>
+</header>
+
+<main class="prod-layout" id="prodMain">
+  <div class="loading">Cargando producto...</div>
+</main>
+
+<section class="related">
+  <h2>Otras tarjetas que te pueden interesar</h2>
+  <div class="grid" id="relatedGrid"></div>
+</section>
+
+<script src="../js/auth-ui.js"></script>
+<script src="producto.js"></script>
+</body>
+</html>

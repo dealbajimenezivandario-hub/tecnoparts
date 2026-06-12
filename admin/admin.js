@@ -115,4 +115,10 @@ async function eliminar(id) {
 }
 
 document.getElementById('reloadBtn').addEventListener('click', cargarProductos);
-document.addEventListener('DOMContentLoaded', cargarProductos);
+document.addEventListener('DOMContentLoaded', async () => {
+  await TecnoAuth.updateNavbar();
+  // Admin solo accesible para tecnicos
+  const user = await TecnoAuth.gateRequireRol('tecnico', 'crear y administrar tarjetas');
+  if (!user) return;
+  cargarProductos();
+});

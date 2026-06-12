@@ -41,6 +41,46 @@ a { text-decoration: none; color: inherit; }
 .input-icon span { color: var(--text-soft); margin-right: 8px; }
 .input-icon input { flex: 1; border: none; outline: none; padding: 12px 0; font-size: 15px; font-family: inherit; background: transparent; }
 
+.auth-card-wide { max-width: 720px !important; }
+.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.row-2 .col { display: flex; flex-direction: column; }
+.rol-title { margin-top: 4px; }
+.rol-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.rol-card {
+  position: relative;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  background: #fff;
+}
+.rol-card:hover { border-color: var(--primary); transform: translateY(-1px); }
+.rol-card.selected {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  box-shadow: 0 4px 16px rgba(14,74,138,0.12);
+}
+.rol-card input[type="radio"] { position: absolute; top: 12px; right: 12px; accent-color: var(--primary); }
+.rol-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.rol-icon { font-size: 26px; }
+.rol-name { font-weight: 800; font-size: 17px; color: var(--text); }
+.rol-list { list-style: none; padding-left: 0; font-size: 12.5px; line-height: 1.5; margin-top: 6px; }
+.rol-list li { color: var(--text-soft); padding: 1px 0; }
+.rol-list li b { color: var(--text); }
+.rol-list.ok li:first-child b { color: #166534; }
+.rol-list.no li:first-child b { color: #B91C1C; }
+.rol-list.no { margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--border); }
+
+@media (max-width: 640px) {
+  .rol-options, .row-2 { grid-template-columns: 1fr; }
+}
+
 .btn-primary { width: 100%; background: var(--primary); color: #fff; border: none; border-radius: 8px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; transition: background 0.15s; font-family: inherit; margin-top: 8px; }
 .btn-primary:hover { background: var(--primary-dark); }
 .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }

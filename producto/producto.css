@@ -1,0 +1,66 @@
+:root { --primary:#0E4A8A; --primary-dark:#0A3766; --primary-light:#E8F0F9; --text:#1F2937; --text-soft:#6B7280; --border:#E5E7EB; --bg-soft:#F5F7FA; --success:#16A34A; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--text);background:#fff}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block}
+
+.topbar{background:var(--primary);color:#fff;text-align:center;padding:8px;font-size:14px;font-weight:500}
+.navbar{display:flex;align-items:center;gap:24px;padding:16px 48px;background:#fff;border-bottom:1px solid var(--border)}
+.logo{font-weight:800;font-size:20px}
+.nav-links{display:flex;gap:24px;flex:1}
+.nav-links a{color:var(--text-soft);font-weight:500}
+.nav-links a:hover{color:var(--primary)}
+
+.prod-layout{max-width:1200px;margin:0 auto;padding:32px 48px;display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.loading{grid-column:1/-1;text-align:center;padding:64px;color:var(--text-soft)}
+
+.prod-gallery{background:var(--bg-soft);border-radius:16px;padding:24px;display:flex;align-items:center;justify-content:center;min-height:480px}
+.prod-gallery img{max-width:100%;max-height:460px;object-fit:contain;border-radius:8px}
+.prod-gallery .ph{font-size:80px;color:var(--text-soft)}
+
+.prod-info h1{font-size:32px;font-weight:800;line-height:1.2;margin-bottom:14px}
+.prod-tags{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.tag{padding:4px 12px;border-radius:999px;font-size:12px;font-weight:600}
+.tag.brand{background:#fff;border:1px solid var(--border);color:var(--text)}
+.tag.tipo{background:var(--primary-light);color:var(--primary)}
+.tag.stock{background:#ECFDF5;color:var(--success)}
+.tag.nostock{background:#FEE2E2;color:#B91C1C}
+
+.prod-modelo{font-family:monospace;background:var(--bg-soft);padding:8px 12px;border-radius:6px;font-size:13px;color:var(--text-soft);display:inline-block;margin-bottom:20px}
+
+.prod-price{font-size:42px;font-weight:800;color:var(--primary);margin:20px 0}
+
+.prod-details{border:1px solid var(--border);border-radius:12px;padding:20px;margin:20px 0}
+.detail-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px dashed var(--border);font-size:14px}
+.detail-row:last-child{border:none}
+.detail-row .lbl{color:var(--text-soft);font-weight:600}
+.detail-row .val{color:var(--text);font-weight:700}
+
+.prod-desc{background:var(--bg-soft);border-radius:12px;padding:18px;margin:16px 0;font-size:14px;line-height:1.6;color:var(--text)}
+.prod-desc h3{font-size:14px;font-weight:800;margin-bottom:8px;color:var(--primary);text-transform:uppercase;letter-spacing:0.5px}
+
+.btn-buy{width:100%;background:var(--primary);color:#fff;border:none;border-radius:12px;padding:18px;font-size:17px;font-weight:800;cursor:pointer;font-family:inherit;transition:background .2s;margin-top:14px}
+.btn-buy:hover{background:var(--primary-dark)}
+.btn-buy:disabled{opacity:.5;cursor:not-allowed}
+.btn-secondary{width:100%;background:#fff;color:var(--primary);border:2px solid var(--primary);border-radius:12px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:10px;font-family:inherit}
+.btn-secondary:hover{background:var(--primary-light)}
+
+.related{max-width:1200px;margin:0 auto;padding:32px 48px 64px}
+.related h2{font-size:22px;font-weight:800;margin-bottom:20px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.card{border:1px solid var(--border);border-radius:12px;background:#fff;overflow:hidden;cursor:pointer;transition:all .2s;display:flex;flex-direction:column}
+.card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(14,74,138,.08)}
+.card-img{aspect-ratio:4/3;background:#F9FAFB;position:relative;overflow:hidden}
+.card-img img{width:100%;height:100%;object-fit:cover}
+.card-img .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--text-soft);font-size:30px}
+.card-body{padding:14px;flex:1;display:flex;flex-direction:column}
+.card-tipo{display:inline-block;background:var(--primary-light);color:var(--primary);padding:2px 10px;border-radius:999px;font-size:11px;font-weight:600;margin-bottom:6px;align-self:flex-start}
+.card-name{font-size:14px;font-weight:700;margin-bottom:10px;flex:1}
+.card-price{font-size:16px;font-weight:800;color:var(--primary)}
+
+@media(max-width:900px){
+  .prod-layout{grid-template-columns:1fr;padding:20px}
+  .related{padding:20px}
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .navbar{padding:12px 16px;gap:12px;flex-wrap:wrap}
+}

@@ -3,23 +3,26 @@ const API = '../api';
 function formatoCOP(n) { return '$' + Number(n).toLocaleString('es-CO'); }
 
 function cardHTML(p) {
-  const img = p.imagen ? `<img src=\"../${p.imagen}\" alt=\"${p.nombre}\" onerror=\"this.style.display='none'; this.nextElementSibling.style.display='flex';\">` : '';
-  const stock = p.stock > 0 ? `<span class=\"stock-tag\">Stock: ${p.stock}</span>` : '';
+  const img = p.imagen ? `<img src="../${p.imagen}" alt="${p.nombre}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">` : '';
+  const stock = p.stock > 0 ? `<span class="stock-tag">Stock: ${p.stock}</span>` : '';
+  const creador = p.creador_nombre || 'TecnoParts';
+  const creadorIcon = p.creador_rol === 'tecnico' ? '🛠️' : '🏪';
   return `
-    <div class=\"card\" data-testid=\"result-card-${p.id}\">
-      <div class=\"card-img\">
+    <div class="card" data-testid="result-card-${p.id}">
+      <div class="card-img">
         ${img}
-        <div class=\"placeholder\" ${img ? 'style=\"display:none\"' : ''}>Sin imagen</div>
-        <span class=\"brand-tag\">${p.marca}</span>
+        <div class="placeholder" ${img ? 'style="display:none"' : ''}>Sin imagen</div>
+        <span class="brand-tag">${p.marca}</span>
         ${stock}
       </div>
-      <div class=\"card-body\">
-        <span class=\"card-tipo\">${p.tipo}</span>
-        <span class=\"card-modelo\">Mod: ${p.modelo}</span>
-        <div class=\"card-name\">${p.nombre}</div>
-        <div class=\"card-foot\">
-          <span class=\"card-price\">${formatoCOP(p.precio)}</span>
-          <button class=\"btn-add\" data-id=\"${p.id}\" data-testid=\"add-cart-${p.id}\">🛒</button>
+      <div class="card-body">
+        <span class="card-tipo">${p.tipo}</span>
+        <span class="card-modelo">Mod: ${p.modelo}</span>
+        <div class="card-name">${p.nombre}</div>
+        <div class=\"card-creador\" title=\"Publicado por ${creador}\">${creadorIcon} ${creador}</div>
+        <div class="card-foot">
+          <span class="card-price">${formatoCOP(p.precio)}</span>
+          <button class="btn-add" data-id="${p.id}" data-testid="add-cart-${p.id}">🛒</button>
         </div>
       </div>
     </div>`;
@@ -30,12 +33,12 @@ let currentQ = '';
 async function buscar() {
   const grid = document.getElementById('grid');
   const totalEl = document.getElementById('totalCount');
-  grid.innerHTML = '<div class=\"loading\">Buscando...</div>';
+  grid.innerHTML = '<div class="loading">Buscando...</div>';
 
   if (!currentQ) {
     grid.innerHTML = `
-      <div class=\"empty-state\" data-testid=\"search-empty\">
-        <div class=\"icon\">🔍</div>
+      <div class="empty-state" data-testid="search-empty">
+        <div class="icon">🔍</div>
         <h3>Escribe algo para buscar</h3>
         <p>Ingresa un modelo de TV o el tipo de tarjeta que necesitas.</p>
       </div>`;
@@ -43,14 +46,22 @@ async function buscar() {
     return;
   }
 
-  const marcas = Array.from(document.querySelectorAll('input[name=\"marca\"]:checked')).map(x => x.value);
-  const tipos  = Array.from(document.querySelectorAll('input[name=\"tipo\"]:checked')).map(x => x.value);
+  const marcas = Array.from(document.querySelectorAll('input[name="marca"]:checked')).map(x => x.value);
+  const tipos  = Array.from(document.querySelectorAll('input[name="tipo"]:checked')).map(x => x.value);
 
   try {
     const res = await fetch(`${API}/buscar.php?q=${encodeURIComponent(currentQ)}`);
-    const data = await res.json();
-    let productos = data.productos || [];
+    const text = await res.text();
+    let data;
+    try { data = JSON.parse(text); }
+    catch (parseErr) {
+      grid.innerHTML = `<div class="empty-state"><h3>Respuesta no valida</h3>
+        <p style="font-family:monospace;background:#fff3cd;padding:12px;border-radius:8px;white-space:pre-wrap;text-align:left;max-width:800px;margin:12px auto;">${text.slice(0,800).replace(/</g,'&lt;')}</p></div>`;
+      return;
+    }
+    if (!data.ok) { grid.innerHTML = `<div class="empty-state"><h3>Error</h3><p>${data.error}</p></div>`; return; }
 
+    let productos = data.productos || [];
     if (marcas.length) productos = productos.filter(p => marcas.includes(p.marca));
     if (tipos.length)  productos = productos.filter(p => tipos.includes(p.tipo));
 
@@ -58,21 +69,26 @@ async function buscar() {
 
     if (productos.length === 0) {
       grid.innerHTML = `
-        <div class=\"empty-state\" data-testid=\"search-no-results\">
-          <div class=\"icon\">🔍</div>
+        <div class="empty-state" data-testid="search-no-results">
+          <div class="icon">🔍</div>
           <h3>No se encontraron tarjetas</h3>
-          <p>No tenemos resultados para \"<strong>${currentQ}</strong>\". Intenta buscar solo el modelo numérico o contáctanos por WhatsApp para encargos especiales.</p>
-          <button onclick=\"limpiarBusqueda()\" data-testid=\"clear-search\">Limpiar búsqueda</button>
+          <p>No tenemos resultados para "<strong>${currentQ}</strong>".</p>
+          <button onclick="limpiarBusqueda()">Limpiar busqueda</button>
         </div>`;
       return;
     }
 
     grid.innerHTML = productos.map(cardHTML).join('');
+    grid.querySelectorAll('.card').forEach(c => {
+      const id = c.dataset.testid.replace('result-card-', '');
+      c.style.cursor = 'pointer';
+      c.addEventListener('click', e => { if (!e.target.closest('.btn-add')) location.href = `../producto/producto.html?id=${id}`; });
+    });
     grid.querySelectorAll('.btn-add').forEach(btn => {
-      btn.addEventListener('click', () => agregarCarrito(btn.dataset.id));
+      btn.addEventListener('click', e => { e.stopPropagation(); agregarCarrito(btn.dataset.id); });
     });
   } catch (e) {
-    grid.innerHTML = '<div class=\"empty-state\"><h3>Error de conexión</h3><p>Verifica que XAMPP esté corriendo.</p></div>';
+    grid.innerHTML = `<div class="empty-state"><h3>Error de red</h3><p>${e.message}</p></div>`;
   }
 }
 
@@ -86,6 +102,8 @@ function limpiarBusqueda() {
 window.limpiarBusqueda = limpiarBusqueda;
 
 async function agregarCarrito(id) {
+  const user = await TecnoAuth.requireLogin('agregar productos al carrito');
+  if (!user) return;
   try {
     const res = await fetch(`${API}/carrito.php?action=add`, {
       method: 'POST',
@@ -93,39 +111,15 @@ async function agregarCarrito(id) {
       body: JSON.stringify({ producto_id: id, cantidad: 1 })
     });
     const data = await res.json();
-    if (data.ok) { actualizarContador(); alert('Producto agregado'); }
+    if (data.ok) { TecnoAuth.refreshCartCount(); alert('Producto agregado'); }
     else alert(data.error);
   } catch (e) { alert('Error de conexion'); }
 }
 
-async function actualizarContador() {
-  try {
-    const res = await fetch(`${API}/carrito.php`);
-    const data = await res.json();
-    document.getElementById('cartCount').textContent = data.cantidad_items || 0;
-  } catch (e) { /* */ }
-}
-
-async function verificarSesion() {
-  try {
-    const res = await fetch(`${API}/sesion.php`);
-    const data = await res.json();
-    if (data.autenticado) {
-      const btn = document.getElementById('btnLogin');
-      const inicial = (data.usuario.nombre || '?').trim().charAt(0).toUpperCase();
-      btn.innerHTML = `<span class=\"user-avatar\" style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:#0E4A8A;color:#fff;font-weight:700;font-size:14px;vertical-align:middle;\">${inicial}</span>`;
-      btn.href = '#';
-      btn.title = data.usuario.nombre + ' (clic para cerrar sesion)';
-      btn.onclick = async (e) => {
-        e.preventDefault();
-        if (confirm('¿Cerrar sesion?')) { await fetch(`${API}/logout.php`); location.reload(); }
-      };
-
-    }
-  } catch (e) { /* */ }
-}
-
 document.addEventListener('DOMContentLoaded', () => {
+  TecnoAuth.updateNavbar();
+  TecnoAuth.refreshCartCount();
+
   const params = new URLSearchParams(location.search);
   currentQ = params.get('q') || '';
   if (currentQ) {
@@ -152,11 +146,9 @@ document.addEventListener('DOMContentLoaded', () => {
     buscar();
   });
 
-  document.querySelectorAll('.filters input[type=\"checkbox\"]').forEach(cb => {
+  document.querySelectorAll('.filters input[type="checkbox"]').forEach(cb => {
     cb.addEventListener('change', buscar);
   });
 
   buscar();
-  actualizarContador();
-  verificarSesion();
 });

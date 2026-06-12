@@ -4,170 +4,151 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Iniciar Sesión / Registro - TecnoParts</title>
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
 <link rel="stylesheet" href="login.css">
 </head>
-
 <body>
 
 <div class="topbar">📍 Entregas locales exclusivas en Santa Marta</div>
 
 <header class="navbar">
   <a href="../inicio/inicio.html" class="logo">📺 TecnoParts</a>
-
   <nav class="nav-links">
     <a href="../inicio/inicio.html">Inicio</a>
     <a href="../catalogo/catalogo.html">Catálogo</a>
+    <a href="../admin/admin.html" class="nav-add-card" style="display:none">+ Agregar Tarjeta</a>
   </nav>
-
   <a href="../carrito/carrito.html" class="btn-cart">🛒</a>
 </header>
 
 <main class="auth-wrap">
-  <div class="auth-card">
+  <div class="auth-card auth-card-wide">
 
     <div class="tabs">
-      <button class="tab active" data-tab="login" data-testid="tab-login">
-        Iniciar Sesión
-      </button>
-
-      <button class="tab" data-tab="register" data-testid="tab-register">
-        Registrarse
-      </button>
+      <button class="tab active" data-tab="login" data-testid="tab-login">Iniciar Sesión</button>
+      <button class="tab" data-tab="register" data-testid="tab-register">Registrarse</button>
     </div>
 
-    <!-- Login form -->
+    <!-- LOGIN -->
     <form class="form" id="loginForm" data-testid="login-form">
-
       <h1>Bienvenido de nuevo</h1>
-
-      <p class="muted">
-        Ingresa para gestionar tus pedidos y repuestos.
-      </p>
+      <p class="muted">Ingresa para gestionar tus pedidos y repuestos.</p>
 
       <label>Correo electrónico</label>
-
       <div class="input-icon">
         <span>✉️</span>
-
-        <input 
-          type="email" 
-          name="email" 
-          placeholder="tecnico@ejemplo.com" 
-          required 
-          data-testid="login-email"
-        >
+        <input type="email" name="email" placeholder="tucorreo@ejemplo.com" required data-testid="login-email">
       </div>
 
       <div class="row-between">
         <label>Contraseña</label>
-
-        <a href="#" class="link-small">
-          ¿Olvidaste tu contraseña?
-        </a>
+        <a href="#" class="link-small">¿Olvidaste tu contraseña?</a>
       </div>
-
       <div class="input-icon">
         <span>🔒</span>
-
-        <input 
-          type="password" 
-          name="password" 
-          placeholder="••••••••" 
-          required 
-          data-testid="login-password"
-        >
+        <input type="password" name="password" placeholder="••••••••" required data-testid="login-password">
       </div>
 
-      <button 
-        type="submit" 
-        class="btn-primary" 
-        data-testid="login-submit"
-      >
-        Ingresar a mi cuenta
-      </button>
-
+      <button type="submit" class="btn-primary" data-testid="login-submit">Ingresar a mi cuenta</button>
       <div class="msg" id="loginMsg"></div>
-
     </form>
 
-    <!-- Register form -->
+    <!-- REGISTRO -->
     <form class="form hidden" id="registerForm" data-testid="register-form">
-
-      <h1>Crea tu cuenta técnica</h1>
-
-      <p class="muted">
-        Únete a la red de técnicos de Santa Marta.
-      </p>
+      <h1>Crea tu cuenta</h1>
+      <p class="muted">Únete a la red TecnoParts de Santa Marta.</p>
 
       <label>Nombre completo / Taller</label>
-
       <div class="input-icon">
         <span>👤</span>
-
-        <input 
-          type="text" 
-          name="nombre" 
-          placeholder="Tu nombre o negocio" 
-          required 
-          data-testid="register-name"
-        >
+        <input type="text" name="nombre" placeholder="Tu nombre o nombre del negocio" required data-testid="register-name">
       </div>
 
-      <label>Correo electrónico</label>
-
-      <div class="input-icon">
-        <span>✉️</span>
-
-        <input 
-          type="email" 
-          name="email" 
-          placeholder="tecnico@ejemplo.com" 
-          required 
-          data-testid="register-email"
-        >
+      <div class="row-2">
+        <div class="col">
+          <label>Correo electrónico</label>
+          <div class="input-icon">
+            <span>✉️</span>
+            <input type="email" name="email" placeholder="tucorreo@ejemplo.com" required data-testid="register-email">
+          </div>
+        </div>
+        <div class="col">
+          <label>Teléfono / WhatsApp</label>
+          <div class="input-icon">
+            <span>📱</span>
+            <input type="tel" name="telefono" placeholder="+57 300 000 0000" required data-testid="register-telefono">
+          </div>
+        </div>
       </div>
 
       <label>Contraseña</label>
-
       <div class="input-icon">
         <span>🔒</span>
-
-        <input 
-          type="password" 
-          name="password" 
-          placeholder="Mínimo 8 caracteres" 
-          required 
-          minlength="8" 
-          data-testid="register-password"
-        >
+        <input type="password" name="password" placeholder="Mínimo 8 caracteres" required minlength="8" data-testid="register-password">
       </div>
 
-      <div class="info-box">
-        ✓ Obtendrás acceso a historial de compras, facturación ágil y alertas de stock de modelos específicos.
+      <!-- Selector de ROL -->
+      <label class="rol-title">¿Cómo quieres registrarte?</label>
+      <div class="rol-options" data-testid="rol-options">
+
+        <label class="rol-card" data-testid="rol-comprador">
+          <input type="radio" name="rol" value="comprador" checked>
+          <div class="rol-body">
+            <div class="rol-head">
+              <span class="rol-icon">🛒</span>
+              <span class="rol-name">Comprador</span>
+            </div>
+            <ul class="rol-list ok">
+              <li><b>✓ Sí puede:</b></li>
+              <li>Ver el catálogo completo</li>
+              <li>Agregar tarjetas a su carrito</li>
+              <li>Comprar y proceder al pago</li>
+            </ul>
+            <ul class="rol-list no">
+              <li><b>✗ No puede:</b></li>
+              <li>Publicar tarjetas para la venta</li>
+              <li>Acceder al panel de administración</li>
+            </ul>
+          </div>
+        </label>
+
+        <label class="rol-card" data-testid="rol-tecnico">
+          <input type="radio" name="rol" value="tecnico">
+          <div class="rol-body">
+            <div class="rol-head">
+              <span class="rol-icon">🛠️</span>
+              <span class="rol-name">Técnico</span>
+            </div>
+            <ul class="rol-list ok">
+              <li><b>✓ Sí puede:</b></li>
+              <li>Ver el catálogo completo</li>
+              <li>Comprar y agregar al carrito</li>
+              <li><b>Crear sus propias tarjetas</b></li>
+              <li><b>Eliminar tarjetas creadas por él</b></li>
+            </ul>
+            <ul class="rol-list no">
+              <li><b>✗ No puede:</b></li>
+              <li>Eliminar tarjetas creadas por otros técnicos</li>
+            </ul>
+          </div>
+        </label>
+
       </div>
 
-      <button 
-        type="submit" 
-        class="btn-primary" 
-        data-testid="register-submit"
-      >
-        Registrarme ahora
-      </button>
+      <div class="info-box" id="guestInfo">
+        💡 <b>¿No quieres registrarte?</b> Como visitante puedes ver el catálogo, pero <b>no podrás agregar productos al carrito ni pagar</b> hasta iniciar sesión.
+      </div>
 
+      <button type="submit" class="btn-primary" data-testid="register-submit">Crear mi cuenta</button>
       <div class="msg" id="registerMsg"></div>
-
     </form>
 
   </div>
 </main>
 
+<script src="../js/auth-ui.js"></script>
 <script src="login.js"></script>
-
 </body>
 </html>

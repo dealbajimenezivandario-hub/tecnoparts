@@ -6,21 +6,24 @@ function formatoCOP(n) {
 }
 
 function cardHTML(p) {
-  const img = p.imagen ? `<img src=\"../${p.imagen}\" alt=\"${p.nombre}\" onerror=\"this.style.display='none'; this.nextElementSibling.style.display='flex';\">` : '';
+  const img = p.imagen ? `<img src="../${p.imagen}" alt="${p.nombre}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">` : '';
+    const creador = p.creador_nombre || 'TecnoParts';
+  const creadorIcon = p.creador_rol === 'tecnico' ? '🛠️' : '🏪';
   return `
-    <div class=\"card\" data-testid=\"product-card-${p.id}\">
-      <div class=\"card-img\">
+    <div class="card" data-testid="product-card-${p.id}">
+      <div class="card-img">
         ${img}
-        <div class=\"placeholder\" ${img ? 'style=\"display:none\"' : ''}>Sin imagen</div>
-        <span class=\"brand-tag\">${p.marca}</span>
+        <div class="placeholder" ${img ? 'style="display:none"' : ''}>Sin imagen</div>
+        <span class="brand-tag">${p.marca}</span>
       </div>
-      <div class=\"card-body\">
-        <span class=\"card-modelo\">${p.modelo}</span>
-        <span class=\"card-tipo\">${p.tipo}</span>
-        <div class=\"card-name\">${p.nombre}</div>
-        <div class=\"card-foot\">
-          <span class=\"card-price\">${formatoCOP(p.precio)}</span>
-          <button class=\"btn-add\" data-id=\"${p.id}\" data-testid=\"add-cart-${p.id}\" title=\"Agregar al carrito\">→</button>
+      <div class="card-body">
+        <span class="card-modelo">${p.modelo}</span>
+        <span class="card-tipo">${p.tipo}</span>
+        <div class="card-name">${p.nombre}</div>
+        <div class=\"card-creador\" title=\"Publicado por ${creador}\">${creadorIcon} ${creador}</div>
+        <div class="card-foot">
+          <span class="card-price">${formatoCOP(p.precio)}</span>
+          <button class="btn-add" data-id="${p.id}" data-testid="add-cart-${p.id}" title="Agregar al carrito">→</button>
         </div>
       </div>
     </div>`;
@@ -29,22 +32,46 @@ function cardHTML(p) {
 async function cargarDestacados() {
   const grid = document.getElementById('destacadosGrid');
   try {
-    const res = await fetch(`${API}/productos.php?destacado=1`);
-    const data = await res.json();
-    if (!data.ok || data.productos.length === 0) {
-      grid.innerHTML = '<div class=\"empty\">No hay productos destacados disponibles.</div>';
+    let res = await fetch(`${API}/productos.php?destacado=1`);
+    let text = await res.text();
+    let data;
+    try { data = JSON.parse(text); }
+    catch (e) {
+      grid.innerHTML = `<div class="empty"><b>Respuesta invalida del servidor:</b><pre style="text-align:left;white-space:pre-wrap;background:#fff3cd;padding:12px;border-radius:8px;max-width:800px;margin:12px auto;">${text.slice(0,800).replace(/</g,'&lt;')}</pre><p>Abre <a href="../api/diagnostico.php" target="_blank">diagnostico.php</a>.</p></div>`;
+      return;
+    }
+    if (!data.ok) {
+      grid.innerHTML = `<div class="empty"><b>Error del servidor:</b> ${data.error}<br><a href="../api/diagnostico.php" target="_blank">Ver diagnostico</a></div>`;
+      return;
+    }
+    if (!data.productos || data.productos.length === 0) {
+      res = await fetch(`${API}/productos.php`);
+      data = await res.json();
+    }
+    if (!data.ok || !data.productos || data.productos.length === 0) {
+      grid.innerHTML = `<div class="empty">
+        Aun no hay productos en la base de datos.<br>
+        <a href="../api/diagnostico.php" target="_blank">Ver diagnostico</a>
+      </div>`;
       return;
     }
     grid.innerHTML = data.productos.slice(0, 4).map(cardHTML).join('');
+    grid.querySelectorAll('.card').forEach(c => {
+      const id = c.dataset.testid.replace('product-card-', '');
+      c.style.cursor = 'pointer';
+      c.addEventListener('click', e => { if (!e.target.closest('.btn-add')) location.href = `../producto/producto.html?id=${id}`; });
+    });
     grid.querySelectorAll('.btn-add').forEach(btn => {
-      btn.addEventListener('click', () => agregarCarrito(btn.dataset.id));
+      btn.addEventListener('click', e => { e.stopPropagation(); agregarCarrito(btn.dataset.id); });
     });
   } catch (e) {
-    grid.innerHTML = '<div class=\"empty\">Error al cargar productos. Verifica que XAMPP esté corriendo.</div>';
+    grid.innerHTML = `<div class="empty"><b>Error de red:</b> ${e.message}<br><a href="../api/diagnostico.php" target="_blank">Ver diagnostico</a></div>`;
   }
 }
 
 async function agregarCarrito(productoId) {
+  const user = await TecnoAuth.requireLogin('agregar productos al carrito');
+  if (!user) return;
   try {
     const res = await fetch(`${API}/carrito.php?action=add`, {
       method: 'POST',
@@ -53,43 +80,12 @@ async function agregarCarrito(productoId) {
     });
     const data = await res.json();
     if (data.ok) {
-      actualizarContadorCarrito();
+      TecnoAuth.refreshCartCount();
       alert('Producto agregado al carrito');
     } else {
       alert(data.error || 'Error al agregar');
     }
-  } catch (e) {
-    alert('Error de conexion');
-  }
-}
-
-async function actualizarContadorCarrito() {
-  try {
-    const res = await fetch(`${API}/carrito.php`);
-    const data = await res.json();
-    document.getElementById('cartCount').textContent = data.cantidad_items || 0;
-  } catch (e) { /* silencioso */ }
-}
-
-async function verificarSesion() {
-  try {
-    const res = await fetch(`${API}/sesion.php`);
-    const data = await res.json();
-    if (data.autenticado) {
-      const btn = document.getElementById('btnLogin');
-      const inicial = (data.usuario.nombre || '?').trim().charAt(0).toUpperCase();
-      btn.innerHTML = `<span class=\"user-avatar\" title=\"${data.usuario.nombre}\" style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:#0E4A8A;color:#fff;font-weight:700;font-size:14px;vertical-align:middle;\">${inicial}</span>`;
-      btn.href = '#';
-      btn.title = data.usuario.nombre + ' (clic para cerrar sesion)';
-      btn.onclick = async (e) => {
-        e.preventDefault();
-        if (confirm('¿Cerrar sesion?')) {
-          await fetch(`${API}/logout.php`);
-          location.reload();
-        }
-      };
-    }
-  } catch (e) { /* silencioso */ }
+  } catch (e) { alert('Error de conexion'); }
 }
 
 function setupBuscadores() {
@@ -99,18 +95,16 @@ function setupBuscadores() {
     location.href = `../busqueda/busqueda.html?q=${encodeURIComponent(query)}`;
   };
   document.getElementById('heroSearch').addEventListener('submit', e => {
-    e.preventDefault();
-    ir(e.target.q.value);
+    e.preventDefault(); ir(e.target.q.value);
   });
   document.getElementById('navSearch').addEventListener('submit', e => {
-    e.preventDefault();
-    ir(e.target.q.value);
+    e.preventDefault(); ir(e.target.q.value);
   });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  TecnoAuth.updateNavbar();
+  TecnoAuth.refreshCartCount();
   cargarDestacados();
-  actualizarContadorCarrito();
-  verificarSesion();
   setupBuscadores();
 });

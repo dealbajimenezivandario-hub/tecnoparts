@@ -1,4 +1,4 @@
-"<?php
+<?php
 require_once __DIR__ . '/../config/db.php';
 allowCors();
 startSession();
@@ -7,28 +7,18 @@ $pdo    = getDB();
 $method = $_SERVER['REQUEST_METHOD'];
 $action = $_GET['action'] ?? '';
 
-$usuarioId = $_SESSION['usuario_id'] ?? null;
-if (!$usuarioId && empty($_SESSION['guest_id'])) {
-    $_SESSION['guest_id'] = bin2hex(random_bytes(16));
-}
-$sesionId = $_SESSION['guest_id'] ?? null;
-
-function ownerWhere(&$params, $usuarioId, $sesionId) {
-    if ($usuarioId) { $params[] = $usuarioId; return 'usuario_id = ?'; }
-    $params[] = $sesionId; return 'sesion_id = ?';
-}
+// ===== Todo el carrito requiere sesion (no se permiten invitados) =====
+$usuarioId = requireLogin();
 
 if ($method === 'GET' || $action === 'list') {
-    $params = [];
-    $where  = ownerWhere($params, $usuarioId, $sesionId);
-    $sql = \"SELECT c.id AS carrito_id, c.cantidad,
+    $sql = "SELECT c.id AS carrito_id, c.cantidad,
                    p.id, p.modelo, p.nombre, p.marca, p.tipo, p.precio, p.stock, p.imagen
             FROM carrito c
             JOIN productos p ON p.id = c.producto_id
-            WHERE $where
-            ORDER BY c.fecha DESC\";
+            WHERE c.usuario_id = ?
+            ORDER BY c.fecha DESC";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute($params);
+    $stmt->execute([$usuarioId]);
     $items = $stmt->fetchAll();
 
     $subtotal = 0;
@@ -56,21 +46,16 @@ if ($action === 'add') {
     $stmt->execute([$productoId]);
     if (!$stmt->fetch()) jsonResponse(['ok' => false, 'error' => 'Producto no existe'], 404);
 
-    $params = [$productoId];
-    $where  = ownerWhere($params, $usuarioId, $sesionId);
-    $stmt = $pdo->prepare(\"SELECT id, cantidad FROM carrito WHERE producto_id = ? AND $where\");
-    $stmt->execute($params);
+    $stmt = $pdo->prepare('SELECT id, cantidad FROM carrito WHERE producto_id = ? AND usuario_id = ?');
+    $stmt->execute([$productoId, $usuarioId]);
     $existing = $stmt->fetch();
 
     if ($existing) {
         $stmt = $pdo->prepare('UPDATE carrito SET cantidad = ? WHERE id = ?');
         $stmt->execute([$existing['cantidad'] + $cantidad, $existing['id']]);
-    } elseif ($usuarioId) {
+    } else {
         $stmt = $pdo->prepare('INSERT INTO carrito (usuario_id, producto_id, cantidad) VALUES (?, ?, ?)');
         $stmt->execute([$usuarioId, $productoId, $cantidad]);
-    } else {
-        $stmt = $pdo->prepare('INSERT INTO carrito (sesion_id, producto_id, cantidad) VALUES (?, ?, ?)');
-        $stmt->execute([$sesionId, $productoId, $cantidad]);
     }
     jsonResponse(['ok' => true, 'mensaje' => 'Producto agregado al carrito']);
 }
@@ -81,30 +66,27 @@ if ($action === 'update') {
     if (!$carritoId) jsonResponse(['ok' => false, 'error' => 'carrito_id requerido'], 400);
 
     if ($cantidad <= 0) {
-        $stmt = $pdo->prepare('DELETE FROM carrito WHERE id = ?');
-        $stmt->execute([$carritoId]);
+        $stmt = $pdo->prepare('DELETE FROM carrito WHERE id = ? AND usuario_id = ?');
+        $stmt->execute([$carritoId, $usuarioId]);
         jsonResponse(['ok' => true, 'mensaje' => 'Item eliminado']);
     }
-    $stmt = $pdo->prepare('UPDATE carrito SET cantidad = ? WHERE id = ?');
-    $stmt->execute([$cantidad, $carritoId]);
+    $stmt = $pdo->prepare('UPDATE carrito SET cantidad = ? WHERE id = ? AND usuario_id = ?');
+    $stmt->execute([$cantidad, $carritoId, $usuarioId]);
     jsonResponse(['ok' => true, 'mensaje' => 'Cantidad actualizada']);
 }
 
 if ($action === 'remove') {
     $carritoId = (int) ($data['carrito_id'] ?? 0);
     if (!$carritoId) jsonResponse(['ok' => false, 'error' => 'carrito_id requerido'], 400);
-    $stmt = $pdo->prepare('DELETE FROM carrito WHERE id = ?');
-    $stmt->execute([$carritoId]);
+    $stmt = $pdo->prepare('DELETE FROM carrito WHERE id = ? AND usuario_id = ?');
+    $stmt->execute([$carritoId, $usuarioId]);
     jsonResponse(['ok' => true, 'mensaje' => 'Item eliminado']);
 }
 
 if ($action === 'clear') {
-    $params = [];
-    $where  = ownerWhere($params, $usuarioId, $sesionId);
-    $stmt = $pdo->prepare(\"DELETE FROM carrito WHERE $where\");
-    $stmt->execute($params);
+    $stmt = $pdo->prepare('DELETE FROM carrito WHERE usuario_id = ?');
+    $stmt->execute([$usuarioId]);
     jsonResponse(['ok' => true, 'mensaje' => 'Carrito vaciado']);
 }
 
 jsonResponse(['ok' => false, 'error' => 'Accion invalida'], 400);
-"

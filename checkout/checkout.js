@@ -136,4 +136,9 @@ document.getElementById('btnConfirm').addEventListener('click', async () => {
   }, 1200);
 });
 
-document.addEventListener('DOMContentLoaded', cargarResumen);
+document.addEventListener('DOMContentLoaded', async () => {
+  // Checkout requiere sesion SIEMPRE
+  const user = await TecnoAuth.gateRequireLogin('finalizar tu compra');
+  if (!user) return;
+  cargarResumen();
+});

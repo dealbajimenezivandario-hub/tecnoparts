@@ -4,13 +4,19 @@ function formatoCOP(n) { return '$' + Number(n).toLocaleString('es-CO'); }
 
 async function cargar() {
   const cont = document.getElementById('cartItems');
-  cont.innerHTML = '<div class=\"loading\">Cargando...</div>';
+  cont.innerHTML = '<div class="loading">Cargando...</div>';
   try {
     const res = await fetch(`${API}/carrito.php`);
     const data = await res.json();
+    if (data.login_required) {
+      // Por si acaso, aunque el gate ya redirigio
+      const next = encodeURIComponent(location.pathname);
+      location.href = `../login/login.html?next=${next}`;
+      return;
+    }
     render(data);
   } catch (e) {
-    cont.innerHTML = '<div class=\"empty-cart\"><h3>El carrito esta vacio</h3></div>';
+    cont.innerHTML = '<div class="empty-cart"><h3>Error de conexión</h3><p>Verifica XAMPP.</p></div>';
   }
 }
 
@@ -26,11 +32,11 @@ function render(data) {
 
   if (!data.items || data.items.length === 0) {
     cont.innerHTML = `
-      <div class=\"empty-cart\" data-testid=\"empty-cart\">
-        <div class=\"icon\">🛒</div>
+      <div class="empty-cart" data-testid="empty-cart">
+        <div class="icon">🛒</div>
         <h3>Tu carrito está vacío</h3>
         <p>Agrega productos para empezar a comprar.</p>
-        <a href=\"../catalogo/catalogo.html\">Explorar catálogo</a>
+        <a href="../catalogo/catalogo.html">Explorar catálogo</a>
       </div>`;
     info.style.display = 'none';
     document.getElementById('btnPay').disabled = true;
@@ -41,23 +47,23 @@ function render(data) {
   document.getElementById('btnPay').disabled = false;
 
   cont.innerHTML = data.items.map(it => {
-    const img = it.imagen ? `<img src=\"../${it.imagen}\" onerror=\"this.outerHTML='<span class=\'ph\'>Sin imagen</span>'\">` : '<span class=\"ph\">Sin imagen</span>';
+    const img = it.imagen ? `<img src="../${it.imagen}" onerror="this.outerHTML='<span class=\\'ph\\'>Sin imagen</span>'">` : '<span class="ph">Sin imagen</span>';
     return `
-      <div class=\"cart-row\" data-testid=\"cart-row-${it.carrito_id}\">
-        <div class=\"img\">${img}</div>
-        <div class=\"info\">
-          <span class=\"tag\">${it.marca} • ${it.tipo}</span>
+      <div class="cart-row" data-testid="cart-row-${it.carrito_id}">
+        <div class="img">${img}</div>
+        <div class="info">
+          <span class="tag">${it.marca} • ${it.tipo}</span>
           <h4>${it.nombre}</h4>
-          <span class=\"modelo\">Modelo: ${it.modelo}</span>
-          <div class=\"qty\" data-testid=\"qty-${it.carrito_id}\">
-            <button data-id=\"${it.carrito_id}\" data-q=\"${it.cantidad - 1}\" aria-label=\"Disminuir\">-</button>
+          <span class="modelo">Modelo: ${it.modelo}</span>
+          <div class="qty" data-testid="qty-${it.carrito_id}">
+            <button data-id="${it.carrito_id}" data-q="${it.cantidad - 1}" aria-label="Disminuir">-</button>
             <span>${it.cantidad}</span>
-            <button data-id=\"${it.carrito_id}\" data-q=\"${it.cantidad + 1}\" aria-label=\"Aumentar\">+</button>
+            <button data-id="${it.carrito_id}" data-q="${it.cantidad + 1}" aria-label="Aumentar">+</button>
           </div>
         </div>
-        <div class=\"right\">
-          <button class=\"btn-trash\" data-remove=\"${it.carrito_id}\" data-testid=\"remove-${it.carrito_id}\" aria-label=\"Eliminar\">🗑️</button>
-          <div class=\"price\">${formatoCOP(it.precio * it.cantidad)}</div>
+        <div class="right">
+          <button class="btn-trash" data-remove="${it.carrito_id}" data-testid="remove-${it.carrito_id}" aria-label="Eliminar">🗑️</button>
+          <div class="price">${formatoCOP(it.precio * it.cantidad)}</div>
         </div>
       </div>`;
   }).join('');
@@ -94,27 +100,8 @@ async function eliminar(id) {
   } catch (e) { alert('Error'); }
 }
 
-async function verificarSesion() {
-  try {
-    const res = await fetch(`${API}/sesion.php`);
-    const data = await res.json();
-    if (data.autenticado) {
-      const btn = document.getElementById('btnLogin');
-      const inicial = (data.usuario.nombre || '?').trim().charAt(0).toUpperCase();
-      btn.innerHTML = `<span class=\"user-avatar\" style=\"display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:#0E4A8A;color:#fff;font-weight:700;font-size:14px;vertical-align:middle;\">${inicial}</span>`;
-      btn.href = '#';
-      btn.title = data.usuario.nombre + ' (clic para cerrar sesion)';
-      btn.onclick = async (e) => {
-        e.preventDefault();
-        if (confirm('¿Cerrar sesion?')) { await fetch(`${API}/logout.php`); location.reload(); }
-      };
-
-    }
-  } catch (e) { /* */ }
-}
-
 document.getElementById('btnPay').addEventListener('click', () => {
-  const modalidad = document.querySelector('input[name=\"modalidad\"]:checked');
+  const modalidad = document.querySelector('input[name="modalidad"]:checked');
   if (!modalidad) {
     alert('Por favor selecciona una modalidad: Compra Segura o Préstamo.');
     return;
@@ -144,7 +131,7 @@ const infos = {
       <li>Si <strong>no funciona</strong> o no era la tarjeta, la devuelves y te reintegramos el 100% del dinero.</li>
     </ul>`
 };
-document.querySelectorAll('input[name=\"modalidad\"]').forEach(r => {
+document.querySelectorAll('input[name="modalidad"]').forEach(r => {
   r.addEventListener('change', () => {
     modInfoEl.className = 'mod-info ' + r.value;
     modInfoEl.innerHTML = infos[r.value];
@@ -152,7 +139,10 @@ document.querySelectorAll('input[name=\"modalidad\"]').forEach(r => {
   });
 });
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  await TecnoAuth.updateNavbar();
+  // El carrito requiere sesion SIEMPRE
+  const user = await TecnoAuth.gateRequireLogin('ver tu carrito de compras');
+  if (!user) return;
   cargar();
-  verificarSesion();
 });
