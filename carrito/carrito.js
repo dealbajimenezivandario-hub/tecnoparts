@@ -80,13 +80,19 @@ function render(data) {
 
 async function actualizar(id, cantidad) {
   try {
-    await fetch(`${API}/carrito.php?action=update`, {
+    const res = await fetch(`${API}/carrito.php?action=update`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ carrito_id: id, cantidad })
     });
+    const data = await res.json();
+    if (!res.ok || !data.ok) {
+      alert(data.error || 'Error al actualizar cantidad');
+    }
     cargar();
-  } catch (e) { alert('Error'); }
+  } catch (e) {
+    alert('Error al actualizar el carrito.');
+  }
 }
 
 async function eliminar(id) {

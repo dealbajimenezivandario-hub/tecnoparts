@@ -96,7 +96,7 @@ try {
 
     if ($destacado !== null) { $sql .= ' AND p.destacado = ?'; $params[] = $destacado; }
 
-
+    $sql .= ' AND p.stock > 0';
     $sql .= ' ORDER BY p.destacado DESC, p.fecha_creacion DESC';
 
     $stmt = $pdo->prepare($sql);

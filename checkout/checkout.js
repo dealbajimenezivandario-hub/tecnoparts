@@ -117,23 +117,36 @@ document.getElementById('btnConfirm').addEventListener('click', async () => {
     }
   }
 
-  // Simular procesamiento
   const btn = document.getElementById('btnConfirm');
   btn.disabled = true; btn.textContent = 'Procesando pago...';
 
-  setTimeout(async () => {
-    // Vaciar carrito
-    try { await fetch(`${API}/carrito.php?action=clear`, { method: 'POST' }); } catch (e) {}
-    try { sessionStorage.removeItem('tp_modalidad'); } catch (e) {}
+  try {
+    const res = await fetch(`${API}/carrito.php?action=checkout`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ metodo: m.value, modalidad })
+    });
+    const data = await res.json();
 
-    const orderNum = String(Math.floor(Math.random() * 900000) + 100000);
-    document.getElementById('orderNum').textContent = orderNum;
+    if (!res.ok || !data.ok) {
+      alert(data.error || 'No se pudo procesar el pedido.');
+      btn.disabled = false;
+      btn.textContent = '✓ Confirmar y pagar';
+      return;
+    }
+
+    try { sessionStorage.removeItem('tp_modalidad'); } catch (e) {}
+    document.getElementById('orderNum').textContent = data.pedido_id || String(Math.floor(Math.random() * 900000) + 100000);
     document.getElementById('successMsg').textContent =
       modalidad === 'prestamo'
         ? 'Tu pedido en modalidad PRÉSTAMO ha sido recibido. Tienes 72 horas para probar la tarjeta. Te contactaremos por WhatsApp.'
         : 'Tu pedido (Compra Segura) ha sido recibido. Te contactaremos por WhatsApp para coordinar la entrega.';
     document.getElementById('successModal').classList.add('show');
-  }, 1200);
+  } catch (e) {
+    alert('Error de conexión al procesar el pedido.');
+    btn.disabled = false;
+    btn.textContent = '✓ Confirmar y pagar';
+  }
 });
 
 document.addEventListener('DOMContentLoaded', async () => {

@@ -7,6 +7,7 @@
               || location.pathname.includes('/catalogo/') || location.pathname.includes('/busqueda/')
               || location.pathname.includes('/carrito/') || location.pathname.includes('/checkout/')
               || location.pathname.includes('/login/')   || location.pathname.includes('/producto/')
+              || location.pathname.includes('/perfil/')
               ? '../api' : 'api';
 
   let sessionCache = null;
@@ -26,7 +27,7 @@
   //  - Si autenticado: muestra avatar circular con inicial + logout al hacer clic
   //  - Si rol != tecnico: oculta los links "+ Agregar Tarjeta"
   async function updateNavbar() {
-    const session = await getSession();
+    const session = await getSession(true);
     const btnLogin = document.getElementById('btnLogin');
     const addCardLinks = document.querySelectorAll('.nav-add-card');
 
@@ -35,26 +36,28 @@
       const inicial = (u.nombre || '?').trim().charAt(0).toUpperCase();
       const color = u.rol === 'tecnico' ? '#0E4A8A' : '#0d9488';
       if (btnLogin) {
+        const avatarHtml = u.avatar
+          ? `<img src="../${u.avatar}" alt="Avatar de ${u.nombre}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
+          : inicial;
         btnLogin.innerHTML = `<span class="user-avatar" title="${u.nombre} (${u.rol})"
           style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;
-                 border-radius:50%;background:${color};color:#fff;font-weight:700;font-size:14px;
-                 vertical-align:middle;border:2px solid #fff;box-shadow:0 0 0 2px ${color};">
-          ${inicial}</span>`;
-        btnLogin.href = '#';
-        btnLogin.title = `${u.nombre} - ${u.rol} (clic para cerrar sesion)`;
-        btnLogin.onclick = async (e) => {
-          e.preventDefault();
-          if (confirm(`¿Cerrar sesion de ${u.nombre}?`)) {
-            await fetch(`${API}/logout.php`);
-            location.reload();
-          }
-        };
+                 border-radius:50%;background:${u.avatar ? 'transparent' : color};color:#fff;font-weight:700;font-size:14px;
+                 vertical-align:middle;border:2px solid #fff;box-shadow:0 0 0 2px ${color};overflow:hidden;">
+          ${avatarHtml}</span>`;
+        btnLogin.href = '../perfil/perfil.html';
+        btnLogin.title = `Ir a configuración de perfil`;
+        btnLogin.onclick = null;
       }
-      // Solo técnico ve "Agregar Tarjeta"
       addCardLinks.forEach(el => {
         el.style.display = u.rol === 'tecnico' ? '' : 'none';
       });
     } else {
+      if (btnLogin) {
+        btnLogin.innerHTML = '👤 Ingresar';
+        btnLogin.href = '../login/login.html';
+        btnLogin.title = 'Ingresar';
+        btnLogin.onclick = null;
+      }
       addCardLinks.forEach(el => { el.style.display = 'none'; });
     }
     return session;
@@ -105,10 +108,21 @@
     } catch (e) { el.textContent = '0'; }
   }
 
+  async function logout() {
+    try {
+      await fetch(`${API}/logout.php`);
+    } catch (e) {
+      // ignore network errors, still clear client state
+    }
+    sessionCache = null;
+    await updateNavbar();
+  }
+
   window.TecnoAuth = {
     api: API,
     getSession,
     updateNavbar,
+    logout,
     requireLogin,
     gateRequireLogin,
     gateRequireRol,

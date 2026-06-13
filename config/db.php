@@ -52,6 +52,7 @@ function ensureSchema(PDO $pdo) {
         `nombre` VARCHAR(150) NOT NULL,
         `email` VARCHAR(150) NOT NULL UNIQUE,
         `telefono` VARCHAR(30) DEFAULT NULL,
+        `profile_image` VARCHAR(255) DEFAULT NULL,
         `rol` VARCHAR(20) NOT NULL DEFAULT 'comprador',
         `password` VARCHAR(255) NOT NULL,
         `fecha_registro` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -122,6 +123,7 @@ function ensureSchema(PDO $pdo) {
         "ALTER TABLE productos ADD COLUMN destacado TINYINT(1) DEFAULT 0"                         => "SHOW COLUMNS FROM productos LIKE 'destacado'",
         "ALTER TABLE productos ADD COLUMN usuario_id INT(11) DEFAULT NULL"                        => "SHOW COLUMNS FROM productos LIKE 'usuario_id'",
         "ALTER TABLE usuarios  ADD COLUMN telefono VARCHAR(30) DEFAULT NULL"                      => "SHOW COLUMNS FROM usuarios LIKE 'telefono'",
+        "ALTER TABLE usuarios  ADD COLUMN profile_image VARCHAR(255) DEFAULT NULL"                => "SHOW COLUMNS FROM usuarios LIKE 'profile_image'",
         "ALTER TABLE usuarios  ADD COLUMN rol VARCHAR(20) NOT NULL DEFAULT 'comprador'"           => "SHOW COLUMNS FROM usuarios LIKE 'rol'",
     ];
     foreach ($migrations as $alter => $check) {

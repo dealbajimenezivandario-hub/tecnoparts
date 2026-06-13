@@ -44,6 +44,7 @@ $_SESSION['usuario_nombre'] = $nombre;
 $_SESSION['usuario_email']  = $email;
 $_SESSION['usuario_rol']    = $rol;
 $_SESSION['usuario_tel']    = $telefono;
+$_SESSION['usuario_avatar'] = null;
 
 jsonResponse([
     'ok' => true,
@@ -53,6 +54,7 @@ jsonResponse([
         'nombre' => $nombre,
         'email' => $email,
         'telefono' => $telefono,
-        'rol' => $rol
+        'rol' => $rol,
+        'avatar' => null
     ]
 ]);

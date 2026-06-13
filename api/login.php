@@ -16,7 +16,7 @@ if ($email === '' || $password === '') {
 }
 
 $pdo  = getDB();
-$stmt = $pdo->prepare('SELECT id, nombre, email, telefono, rol, password FROM usuarios WHERE email = ?');
+$stmt = $pdo->prepare('SELECT id, nombre, email, telefono, rol, password, profile_image FROM usuarios WHERE email = ?');
 $stmt->execute([$email]);
 $user = $stmt->fetch();
 
@@ -29,6 +29,7 @@ $_SESSION['usuario_nombre'] = $user['nombre'];
 $_SESSION['usuario_email']  = $user['email'];
 $_SESSION['usuario_rol']    = $user['rol'] ?: 'comprador';
 $_SESSION['usuario_tel']    = $user['telefono'] ?? '';
+$_SESSION['usuario_avatar'] = $user['profile_image'] ?? null;
 
 jsonResponse([
     'ok' => true,
@@ -38,6 +39,7 @@ jsonResponse([
         'nombre' => $user['nombre'],
         'email' => $user['email'],
         'telefono' => $user['telefono'],
-        'rol' => $user['rol'] ?: 'comprador'
+        'rol' => $user['rol'] ?: 'comprador',
+        'avatar' => $user['profile_image'] ?? null
     ]
 ]);
